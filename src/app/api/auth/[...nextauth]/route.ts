@@ -30,14 +30,10 @@ const handler = NextAuth({
   callbacks: {
     async jwt({ token, profile, account, user }) {
       if (account && profile) {
-        console.log("Profile data:", profile); // Debug için
-
         // İlk girişte rolü profile'dan al
         const role = (profile as Record<string, any>)[
           "https://localhost:3000/role"
         ];
-
-        console.log("Role from profile:", role); // Debug için
 
         token.role = role || "user";
         token.userId = token.sub;
@@ -54,15 +50,12 @@ const handler = NextAuth({
               }
             );
             const userInfo = await userInfoResponse.json();
-            console.log("UserInfo:", userInfo); // Debug için
 
             const userRole = userInfo["https://localhost:3000/role"];
             if (userRole) {
               token.role = userRole;
             }
-          } catch (error) {
-            console.error("Error fetching user info:", error);
-          }
+          } catch (error) {}
         }
       }
       return token;
@@ -73,7 +66,7 @@ const handler = NextAuth({
         session.user.role = token.role as string | undefined;
         session.user.id = token.userId as string | undefined;
       }
-      console.log("Final session:", session); // Debug için
+
       return session;
     },
   },
