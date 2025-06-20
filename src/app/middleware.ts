@@ -1,43 +1,40 @@
+// middleware.ts
 import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
 
 export default withAuth(
   function middleware(req) {
-    // Rol bazlı yetkilendirme
-    const token = req.nextauth.token;
     const { pathname } = req.nextUrl;
+    const token = req.nextauth.token;
 
-    // Admin sayfalarını koruma
-    if (pathname.startsWith("/admin") && token?.role !== "admin") {
-      return NextResponse.redirect(new URL("/unauthorized", req.url));
+    // Admin sayfalarını kontrol et
+    if (pathname.startsWith("/admin")) {
+      if (token?.role !== "admin") {
+        return NextResponse.redirect(new URL("/unauthorized", req.url));
+      }
     }
 
-    // Dashboard erişimi
-    if (pathname.startsWith("/dashboard") && !token) {
-      return NextResponse.redirect(new URL("/login", req.url));
+    // User sayfalarını kontrol et (admin de erişebilir)
+    if (pathname.startsWith("/user")) {
+      if (!token?.role || (token.role !== "user" && token.role !== "admin")) {
+        return NextResponse.redirect(new URL("/unauthorized", req.url));
+      }
     }
 
     return NextResponse.next();
   },
   {
     callbacks: {
-      authorized: ({ token, req }) => {
-        // Korumalı rotalar için token kontrolü
-        const { pathname } = req.nextUrl;
-
-        if (
-          pathname.startsWith("/dashboard") ||
-          pathname.startsWith("/admin")
-        ) {
-          return !!token;
-        }
-
-        return true;
-      },
+      authorized: ({ token }) => !!token,
     },
   }
 );
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/admin/:path*", "/api/protected/:path*"],
+  matcher: [
+    "/dashboard/:path*",
+    "/admin/:path*",
+    "/user/:path*",
+    "/profile/:path*",
+  ],
 };
