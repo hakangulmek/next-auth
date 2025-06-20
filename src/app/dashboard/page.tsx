@@ -16,7 +16,9 @@ function page() {
   const handleSignOut = async () => {
     try {
       // Auth0'dan tamamen çıkış yapmak için logout URL'ini kullan
-      const auth0LogoutUrl = `https://dev-dpcxxbh3ons3vk0m.us.auth0.com/v2/logout?returnTo=${encodeURIComponent(
+      const auth0LogoutUrl = `${
+        process.env.AUTH0_ISSUER_BASE_URL
+      }/v2/logout?returnTo=${encodeURIComponent(
         window.location.origin + "/login"
       )}&client_id=9Z91tgavS7VpFpAuxJPfPpnPNl0gVHRQ`;
 
