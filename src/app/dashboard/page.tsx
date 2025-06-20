@@ -31,12 +31,10 @@ function page() {
       // Auth0'dan da çıkış yap
       window.location.href = auth0LogoutUrl;
     } catch (error) {
-      console.error("SignOut error:", error);
-      // Hata durumunda manuel yönlendirme
       window.location.href = "/login";
     }
   };
-  console.log("Session:", session);
+
   return (
     <div>
       <div>
