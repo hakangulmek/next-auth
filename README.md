@@ -19,6 +19,6 @@ Bu proje, **Next.js 14 App Router** ile oluşturulmuş, **Auth0** üzerinden OAu
 ### 1. Projeyi Klonla
 
 ```bash
-git clone https://github.com/kullaniciadi/next-auth.git
+git clone https://github.com/hakangulmek/next-auth.git
 cd next-auth
 git checkout dev/v1.0.0
