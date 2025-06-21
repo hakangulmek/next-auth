@@ -2,6 +2,8 @@
 import React from "react";
 import { useSession, signOut } from "next-auth/react";
 import { useRole } from "@/hooks/useRole";
+import Link from "next/link";
+import { AdminOnly } from "@/components/AdminOnly";
 
 export default function Page() {
   const { data: session, status } = useSession();
@@ -32,6 +34,21 @@ export default function Page() {
             <p>Rol: {role === "admin" ? "Yönetici" : "Kullanıcı"}</p>
           </div>
         </div>
+
+        {/* Sadece Admin için */}
+        <AdminOnly>
+          <div className="bg-gray-50 border border-gray-200 rounded-lg shadow hover:shadow-md transition-shadow p-6 mb-2">
+            <Link href="/admin/users" className="flex items-center space-x-3">
+              <span className="text-2xl text-gray-700">🔧</span>
+              <div>
+                <h3 className="text-lg font-semibold mb-1 text-gray-800">
+                  Kullanıcı Yönetimi
+                </h3>
+                <p className="text-gray-600 text-sm">Kullanıcıları yönetin</p>
+              </div>
+            </Link>
+          </div>
+        </AdminOnly>
 
         {/* Rol Bilgisi */}
         <div>
